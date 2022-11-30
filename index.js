@@ -110,3 +110,19 @@ async function run() {
             const user = await usersCollection.findOne({ user: email })
             res.send(user)
         })
+         //get all cars
+         app.get('/cars', async (req, res) => {
+            const query = {}
+            const cursor = carsCollection.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        //get car by category
+        //get specific part with id
+        app.get('/cars/:carCategory', async (req, res) => {
+            const category = req.params.carCategory
+            const query = { category: category }
+            const result = await carsCollection.find(query).toArray();
+            res.send(result);
+        })
