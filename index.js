@@ -69,4 +69,17 @@ async function run() {
             const updateUser = await usersCollection.updateOne(filter, updateDoc, options)
             var token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN);
             res.send({ accessToken: token })
+        })//get all users
+        app.get('/users', async (req, res) => {
+            const query = {}
+            const cursor = usersCollection.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+        //get all sellers
+
+        app.get('/allsellers', async (req, res) => {
+            const query = { role: "seller" }
+            const result = await usersCollection.find(query).toArray()
+            return res.send(result)
         })
