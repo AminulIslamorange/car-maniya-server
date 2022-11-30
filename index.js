@@ -43,3 +43,18 @@ async function run() {
             res.send({ role: role })
         })
         //to save a user
+        app.put('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            let role = req.body.role;
+            const name = req.body.name;
+            const filter = { user: email };
+            const options = { upsert: true };
+            const query = { user: email }
+            const gotIt = await usersCollection.findOne(query)
+            console.log(gotIt);
+            if (gotIt?.role == "seller") {
+                role = "seller"
+            }
+            if (gotIt?.role == "admin") {
+                role = "admin"
+            }
