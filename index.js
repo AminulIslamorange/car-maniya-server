@@ -94,3 +94,19 @@ async function run() {
             const query = { role: "user" }
             const result = await usersCollection.find(query).toArray()
             return res.send(result)
+        })
+        // delete one buyer 
+        app.delete('/deletebuyer/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await usersCollection.deleteOne(query);
+            res.send(result)
+        })
+
+        //get only one user
+        app.get('/getuser/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { user: email }
+            const user = await usersCollection.findOne({ user: email })
+            res.send(user)
+        })
