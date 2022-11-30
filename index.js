@@ -58,3 +58,15 @@ async function run() {
             if (gotIt?.role == "admin") {
                 role = "admin"
             }
+            console.log(gotIt);
+            const updateDoc = {
+                $set: {
+                    user: email,
+                    role: role,
+                    name: name
+                }
+            }
+            const updateUser = await usersCollection.updateOne(filter, updateDoc, options)
+            var token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN);
+            res.send({ accessToken: token })
+        })
