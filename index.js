@@ -29,3 +29,17 @@ function verifyJwt(req, res, next) {
         next()
     });
 }
+async function run() {
+    try {
+        await client.connect();
+        const carsCollection = client.db("carmania").collection("cars");
+        const usersCollection = client.db("carmania").collection("users");
+        const ordersCollection = client.db("carmania").collection("orders");
+        //check current users role
+        app.get('/user/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = await usersCollection.findOne({ user: email })
+            const role = user?.role
+            res.send({ role: role })
+        })
+        //to save a user
