@@ -183,4 +183,20 @@ async function run() {
             const query = { advertised: true, sold: false }
             const result = await carsCollection.find(query).toArray();
             res.send(result);
+        }) //insert a car
+        app.post('/cars', async (req, res) => {
+            const car = req.body;
+            const result = carsCollection.insertOne(car)
+            res.send(result)
         })
+    } finally {
+        // await client.close();
+    }
+}
+run().catch(console.dir);
+
+
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+})
