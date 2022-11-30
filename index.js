@@ -125,4 +125,62 @@ async function run() {
             const query = { category: category }
             const result = await carsCollection.find(query).toArray();
             res.send(result);
+        }) //for user
+        //post order
+        app.post('/orders', async (req, res) => {
+            const order = req.body;
+            const orderCompleted = await ordersCollection.insertOne(order)
+            res.send(orderCompleted)
+        })
+        //get specific user orders with email
+        app.get('/orders/:email', async (req, res) => {
+            // const tokenEmail = req.decoded;
+            const email = req.params.email;
+            // if (tokenEmail.email === email) {
+            const query = { email: email }
+            const result = await ordersCollection.find(query).toArray()
+            return res.send(result)
+            // }
+            // else {
+            // return res.status(403).send({ message: "forbidden" })
+            // }
+
+        })
+
+
+        // for seller 
+        // get one sellers her own products 
+        app.get('/sellercars/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { sellerEmail: email }
+            const result = await carsCollection.find(query).toArray()
+            return res.send(result)
+        })
+
+        //delete one car with id
+        //delte one order with id
+        app.delete('/cardelete/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await carsCollection.deleteOne(query);
+            res.send(result)
+        })
+        //advertise one order with id
+        app.put('/advertisecar/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    advertised: true
+                },
+            };
+            const result = await carsCollection.updateOne(filter, updateDoc, options);
+            return res.send(result)
+        })
+        //get only advertised cars
+        app.get('/advertisedcars', async (req, res) => {
+            const query = { advertised: true, sold: false }
+            const result = await carsCollection.find(query).toArray();
+            res.send(result);
         })
